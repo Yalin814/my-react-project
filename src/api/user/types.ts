@@ -1,5 +1,6 @@
 export interface UserInfo {
   userName: string
+  password: string
   Sex: string
   age: number
   phone: string
