@@ -6,9 +6,7 @@ import './App.css'
 function App() {
   const test = true
 
-  useEffect(() => {
-    console.log(`hello world`)
-  }, [])
+  useEffect(() => {}, [])
 
   return <>{test && <TestLodash />}</>
 }

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { Input, Form, Button, FormProps } from 'antd'
-import { addUser, getUserInfo } from '@/api/user'
+import React, { useEffect, useState } from 'react'
+import { Input, Form, Button, FormProps, Table, TableProps } from 'antd'
+import { addUser, getUserInfo, getUserList } from '@/api/user'
 import { type SearchProps } from 'antd/es/input'
 import { type UserInfo } from '@/api/user/types'
 
@@ -24,8 +24,39 @@ const validateMessages = {
 
 const TestLodash: React.FC = () => {
   const [userForm] = Form.useForm<UserInfo>()
+  const tableColumns: TableProps<UserInfo>['columns'] = [
+    {
+      title: 'userId',
+      dataIndex: 'userId'
+    },
+    {
+      title: 'userName',
+      dataIndex: 'userName'
+    },
+    {
+      title: 'nickName',
+      dataIndex: 'nickName'
+    },
+    {
+      title: 'deptId',
+      dataIndex: 'deptId'
+    },
+    {
+      title: 'deptName',
+      dataIndex: 'deptName'
+    }
+  ]
+  const [dataSource, setDataSource] = useState<UserInfo[]>([])
 
-  useEffect(() => {}, [])
+  const fetchUserList = () => {
+    getUserList({ deptId: '103' }).then((res) => {
+      setDataSource(res.data)
+    })
+  }
+
+  useEffect(() => {
+    fetchUserList()
+  }, [])
 
   const onFinish: FormProps['onFinish'] = (values) => {
     userForm.validateFields().then(() => {
@@ -55,6 +86,7 @@ const TestLodash: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Table columns={tableColumns} dataSource={dataSource}></Table>
     </div>
   )
 }
