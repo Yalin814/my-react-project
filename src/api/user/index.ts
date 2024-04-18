@@ -1,10 +1,11 @@
-import service from '@/config/utils/request'
+import service from '@/utils/request'
 import { GetUserListReq, type UserInfo } from './types'
 
 export enum UserApi {
   GET_USER_INFO = '/user/getUserInfo',
   GET_USER_LIST = '/user/getUserList',
-  ADD_USER = '/user/addUser'
+  ADD_USER = '/user/addUser',
+  REMOVE_USER = '/user/removeUser/'
 }
 
 export function getUserInfo(userId: string) {
@@ -21,4 +22,8 @@ export function getUserList(data: GetUserListReq) {
 
 export function addUser(data: UserInfo) {
   return service.post(UserApi.ADD_USER, data)
+}
+
+export function removeUser(userId: string) {
+  return service.delete(`${UserApi.REMOVE_USER}${userId}`)
 }
