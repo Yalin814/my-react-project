@@ -31,7 +31,7 @@ const validateMessages = {
   required: '${label} is required!'
 }
 
-const TestLodash: React.FC = () => {
+const TestLodash = () => {
   const mapContainerRef = useRef(null)
   const [messageApi, contextHolder] = message.useMessage()
   const [userForm] = Form.useForm<UserInfo>()

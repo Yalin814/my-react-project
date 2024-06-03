@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
-import TestLodash from './pages/test'
-
+// import TestLodash from './pages/Test'
 import './App.css'
+import Layout from '@/components/Layout'
 
 function App() {
-  const test = true
-
   useEffect(() => {}, [])
 
-  return <>{test && <TestLodash />}</>
+  return (
+    <div style={{ width: '100%' }}>
+      <Layout></Layout>
+    </div>
+  )
 }
 
 export default App
