@@ -3,6 +3,7 @@ import App from '../App'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
 import UseContextTest from '@/pages/UseContextTest'
+import UseImperativeHandleTest from '@/pages/UseImperativeHandleTest'
 
 export const constantRoutes = [
   {
@@ -20,6 +21,10 @@ export const constantRoutes = [
       {
         path: 'useContextTest',
         element: <UseContextTest />
+      },
+      {
+        path: 'useImperativeHandleTest',
+        element: <UseImperativeHandleTest />
       }
     ]
   },
