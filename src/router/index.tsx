@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
+import UseContextTest from '@/pages/UseContextTest'
 
 export const constantRoutes = [
   {
@@ -15,6 +16,10 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         element: <Dashboard />
+      },
+      {
+        path: 'useContextTest',
+        element: <UseContextTest />
       }
     ]
   },
