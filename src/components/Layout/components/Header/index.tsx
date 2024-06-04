@@ -1,7 +1,7 @@
-import './index.scss'
+import { Layout } from 'antd'
 
 const Header = () => {
-  return <div className="header"></div>
+  return <Layout.Header></Layout.Header>
 }
 
 export default Header

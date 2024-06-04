@@ -4,6 +4,7 @@ import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
 import UseContextTest from '@/pages/UseContextTest'
 import UseImperativeHandleTest from '@/pages/UseImperativeHandleTest'
+import Setting from '@/pages/Setting'
 
 export const constantRoutes = [
   {
@@ -25,6 +26,10 @@ export const constantRoutes = [
       {
         path: 'useImperativeHandleTest',
         element: <UseImperativeHandleTest />
+      },
+      {
+        path: 'setting',
+        element: <Setting />
       }
     ]
   },

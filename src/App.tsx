@@ -1,15 +1,16 @@
 import { useEffect } from 'react'
 // import TestLodash from './pages/Test'
 import './App.css'
-import Layout from '@/components/Layout'
+import { ConfigProvider } from 'antd'
+import MainLayout from './components/Layout'
 
 function App() {
   useEffect(() => {}, [])
 
   return (
-    <div style={{ width: '100%' }}>
-      <Layout></Layout>
-    </div>
+    <ConfigProvider>
+      <MainLayout />
+    </ConfigProvider>
   )
 }
 
