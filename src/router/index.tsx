@@ -5,6 +5,8 @@ import Dashboard from '../pages/Dashboard'
 import UseContextTest from '@/pages/UseContextTest'
 import UseImperativeHandleTest from '@/pages/UseImperativeHandleTest'
 import Setting from '@/pages/Setting'
+import ThreeDemo from '@/pages/ThreeDemo'
+import LoadingModel from '@/pages/ThreeDemo/LoadingModel'
 
 export const constantRoutes = [
   {
@@ -36,6 +38,16 @@ export const constantRoutes = [
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/threeDemo',
+    element: <ThreeDemo />,
+    children: [
+      {
+        path: 'loadingModel',
+        element: <LoadingModel />
+      }
+    ]
   }
 ]
 
