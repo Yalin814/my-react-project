@@ -7,6 +7,7 @@ import UseImperativeHandleTest from '@/pages/UseImperativeHandleTest'
 import Setting from '@/pages/Setting'
 import ThreeDemo from '@/pages/ThreeDemo'
 import LoadingModel from '@/pages/ThreeDemo/LoadingModel'
+import TextureMapping from '@/pages/ThreeDemo/TextureMapping'
 
 export const constantRoutes = [
   {
@@ -46,6 +47,10 @@ export const constantRoutes = [
       {
         path: 'loadingModel',
         element: <LoadingModel />
+      },
+      {
+        path: 'textureMapping',
+        element: <TextureMapping />
       }
     ]
   }

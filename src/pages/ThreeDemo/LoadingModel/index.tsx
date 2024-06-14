@@ -1,10 +1,18 @@
 import { useEffect } from 'react'
-import { WebGLRenderer, Scene, PerspectiveCamera, DirectionalLight, AmbientLight } from 'three'
+import {
+  WebGLRenderer,
+  Scene,
+  PerspectiveCamera,
+  DirectionalLight,
+  AmbientLight,
+  Color
+} from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 const LoadingModel = () => {
   const scene = new Scene()
+  scene.background = new Color('white')
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
   camera.position.set(0, 0, 1)
   const renderer = new WebGLRenderer()
