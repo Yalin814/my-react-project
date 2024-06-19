@@ -24,7 +24,7 @@ const TextureMapping = () => {
   const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
   camera.position.set(1, 1, 2)
   camera.lookAt(0, 0, 0)
-  const ambientLight = new AmbientLight(new Color('golden'), 1)
+  const ambientLight = new AmbientLight(new Color('grey'), 1)
   scene.add(ambientLight)
   scene.background = new Color('white')
   const renderer = new WebGLRenderer()

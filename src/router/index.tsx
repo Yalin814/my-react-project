@@ -8,6 +8,7 @@ import Setting from '@/pages/Setting'
 import ThreeDemo from '@/pages/ThreeDemo'
 import LoadingModel from '@/pages/ThreeDemo/LoadingModel'
 import TextureMapping from '@/pages/ThreeDemo/TextureMapping'
+import AxisPracticing from '@/pages/ThreeDemo/AxisPracticing'
 
 export const constantRoutes = [
   {
@@ -51,6 +52,10 @@ export const constantRoutes = [
       {
         path: 'textureMapping',
         element: <TextureMapping />
+      },
+      {
+        path: 'axisPracticing',
+        element: <AxisPracticing />
       }
     ]
   }
