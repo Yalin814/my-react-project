@@ -15,7 +15,12 @@ import {
   Vector3,
   Group,
   HemisphereLight,
-  MathUtils
+  MathUtils,
+  AdditiveBlending,
+  ShaderMaterial,
+  BufferGeometry,
+  BufferAttribute,
+  Points
 } from 'three'
 import { OrbitControls, Sky } from 'three/examples/jsm/Addons.js'
 import { Body, World } from 'cannon'
@@ -114,6 +119,39 @@ const AxisPracticing = () => {
     scene.add(barrierGroup)
   }
 
+  const setupParticleSystem = () => {
+    const material = new ShaderMaterial({
+      vertexShader: `
+        varying vec3 vPosition;
+        void main() {
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vPosition;
+        void main() {
+          gl_FragColor = vec4(vPosition * 0.5 + 0.5, 1.0);
+        }
+      `,
+      blending: AdditiveBlending,
+      depthWrite: false,
+      depthTest: false
+    })
+
+    const geometry = new BufferGeometry()
+    const count = 1000
+    const positions = new Float32Array(count * 3)
+    for (let i = 0; i < count * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 100
+    }
+    const positionAttribute = new BufferAttribute(positions, 3)
+    geometry.setAttribute('position', positionAttribute)
+
+    const particleSystem = new Points(geometry, material)
+    scene.add(particleSystem)
+  }
+
   const animate = () => {
     orbitControls.update()
     renderer.render(scene, camera)
@@ -160,6 +198,7 @@ const AxisPracticing = () => {
 
   useEffect(() => {
     setupBarriers()
+    // setupParticleSystem()
     document.body.appendChild(renderer.domElement)
     renderer.setAnimationLoop(animate)
     addEventListener('keydown', handleKeyDown)

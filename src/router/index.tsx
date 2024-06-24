@@ -9,6 +9,10 @@ import ThreeDemo from '@/pages/ThreeDemo'
 import LoadingModel from '@/pages/ThreeDemo/LoadingModel'
 import TextureMapping from '@/pages/ThreeDemo/TextureMapping'
 import AxisPracticing from '@/pages/ThreeDemo/AxisPracticing'
+import RouterTest from '@/pages/RouterTest'
+import { lazy } from 'react'
+
+const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
 export const constantRoutes = [
   {
@@ -56,6 +60,33 @@ export const constantRoutes = [
       {
         path: 'axisPracticing',
         element: <AxisPracticing />
+      }
+    ]
+  },
+  {
+    path: '/routerTest',
+    element: <RouterTest />,
+    children: [
+      {
+        path: 'loaderTest',
+        element: <LoaderTest />,
+        loader: async () => {
+          return new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  name: 'test',
+                  age: 18
+                }),
+              2000
+            )
+          )
+        }
+        // loader: async () => {
+        //   const loaderModule = await import('@/pages/RouterTest/LoaderTest/useLoader.ts')
+        //   const loaderFunc = loaderModule.default
+        //   return loaderFunc()
+        // }
       }
     ]
   }
