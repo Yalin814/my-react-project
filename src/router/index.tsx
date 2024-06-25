@@ -18,6 +18,9 @@ export const constantRoutes = [
   {
     path: '/',
     element: <App />,
+    handle: {
+      crumb: '平台'
+    },
     children: [
       {
         path: 'dashboard/:id',
@@ -25,7 +28,10 @@ export const constantRoutes = [
       },
       {
         path: 'dashboard',
-        element: <Dashboard />
+        element: <Dashboard />,
+        handle: {
+          crumb: '首页'
+        }
       },
       {
         path: 'useContextTest',
@@ -70,23 +76,31 @@ export const constantRoutes = [
       {
         path: 'loaderTest',
         element: <LoaderTest />,
-        loader: async () => {
-          return new Promise((resolve) =>
-            setTimeout(
-              () =>
-                resolve({
-                  name: 'test',
-                  age: 18
-                }),
-              2000
-            )
-          )
-        }
-        // loader: async () => {
-        //   const loaderModule = await import('@/pages/RouterTest/LoaderTest/useLoader.ts')
-        //   const loaderFunc = loaderModule.default
-        //   return loaderFunc()
+        // loader: () => {
+        //   const user = new Promise((resolve) =>
+        //     setTimeout(
+        //       () =>
+        //         resolve({
+        //           name: 'test',
+        //           age: 18
+        //         }),
+        //       2000
+        //     )
+        //   )
+        //   return defer({
+        //     user
+        //   })
         // }
+        loader: async () => {
+          const loaderModule = await import('@/pages/RouterTest/LoaderTest/useLoader.ts')
+          const loaderFunc = loaderModule.default
+          return loaderFunc()
+        },
+        action: async () => {
+          const loaderModule = await import('@/pages/RouterTest/LoaderTest/useAction.ts')
+          const loaderFunc = loaderModule.default
+          return loaderFunc
+        }
       }
     ]
   }

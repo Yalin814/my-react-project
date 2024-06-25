@@ -1,0 +1,14 @@
+.breadcrumb {
+    width: 100%;
+    background: #ffffff;
+    padding-inline: 12px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e3e6eb;
+
+    .active {
+        color: #006bfd;
+    }
+    
+}

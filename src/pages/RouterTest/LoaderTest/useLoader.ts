@@ -1,14 +1,19 @@
+import { defer } from 'react-router-dom'
+
 const useLoader = async () => {
-  return new Promise((resolve) =>
+  const user = new Promise((resolve) =>
     setTimeout(
       () =>
         resolve({
           name: 'test',
           age: 18
         }),
-      5000
+      2000
     )
   )
+  return defer({
+    user: user
+  })
 }
 
 export default useLoader
