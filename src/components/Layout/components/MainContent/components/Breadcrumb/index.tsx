@@ -8,7 +8,7 @@ const MainBreadcrumb = () => {
 
   return (
     <Breadcrumb
-      className="breadcrumb"
+      className="layout-breadcrumb"
       items={matches.map((match) => ({
         title:
           match.pathname == location.pathname ? (
@@ -17,8 +17,9 @@ const MainBreadcrumb = () => {
             <NavLink
               to={match.pathname}
               className={({ isActive, isPending }) =>
-                isPending ? 'pending' : isActive ? '' : 'active'
+                isPending ? 'active' : isActive ? '' : 'active'
               }
+              end
             >
               {(match.handle as { crumb: string }).crumb}
             </NavLink>

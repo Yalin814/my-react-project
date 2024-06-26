@@ -5,12 +5,14 @@ import Dashboard from '../pages/Dashboard'
 import UseContextTest from '@/pages/UseContextTest'
 import UseImperativeHandleTest from '@/pages/UseImperativeHandleTest'
 import Setting from '@/pages/Setting'
+import SystemSetting from '@/pages/Setting/SystemSetting'
 import ThreeDemo from '@/pages/ThreeDemo'
 import LoadingModel from '@/pages/ThreeDemo/LoadingModel'
 import TextureMapping from '@/pages/ThreeDemo/TextureMapping'
 import AxisPracticing from '@/pages/ThreeDemo/AxisPracticing'
 import RouterTest from '@/pages/RouterTest'
 import { lazy } from 'react'
+import { MenuType } from '@/types/common'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -43,9 +45,29 @@ export const constantRoutes = [
       },
       {
         path: 'setting',
-        element: <Setting />
+        element: <Setting />,
+        handle: {
+          crumb: '设置'
+        },
+        children: [
+          {
+            path: 'systemSetting',
+            element: <SystemSetting />,
+            handle: {
+              crumb: '系统设置'
+            }
+          }
+        ]
       }
     ]
+  },
+  {
+    path: 'setting/systemSetting/commandCenter',
+    element: <SystemSetting />,
+    handle: {
+      crumb: '指挥中心',
+      menuType: MenuType.LINK
+    }
   },
   {
     path: '/login',

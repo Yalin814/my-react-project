@@ -7,3 +7,9 @@ export interface PageInfo {
   /** 全部数量 */
   total: number
 }
+
+export enum MenuType {
+  MENU = '01',
+  LINK = '02',
+  BUTTON = '03'
+}
