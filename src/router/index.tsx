@@ -13,6 +13,7 @@ import AxisPracticing from '@/pages/ThreeDemo/AxisPracticing'
 import RouterTest from '@/pages/RouterTest'
 import { lazy } from 'react'
 import { MenuType } from '@/types/common'
+import MapTest from '@/pages/Test/MapTest'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -24,6 +25,13 @@ export const constantRoutes = [
       crumb: '平台'
     },
     children: [
+      {
+        path: '/mapTest',
+        element: <MapTest />,
+        handle: {
+          crumb: '天地图'
+        }
+      },
       {
         path: 'dashboard/:id',
         element: <Dashboard />
@@ -71,7 +79,10 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    element: <Login />
+    element: <Login />,
+    handle: {
+      crumb: '登录'
+    }
   },
   {
     path: '/threeDemo',

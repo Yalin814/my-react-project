@@ -4,6 +4,7 @@ import { Form, Input, Button, FormProps } from 'antd'
 import { RuleObject } from 'antd/es/form'
 import { StoreValue } from 'antd/es/form/interface'
 import { useNavigate } from 'react-router-dom'
+import './index.scss'
 
 const validateMessages = {
   required: '${label} is required!'
@@ -28,7 +29,7 @@ const Login = () => {
   }
 
   return (
-    <div className="login-form" style={{ margin: 'auto' }}>
+    <div className="login-container" style={{ margin: 'auto' }}>
       <Form form={loginForm} onFinish={onFinish} validateMessages={validateMessages}>
         <Form.Item
           name="userName"

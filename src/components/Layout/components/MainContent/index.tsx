@@ -1,12 +1,15 @@
 import { Layout } from 'antd'
 import { Outlet } from 'react-router-dom'
 import Breadcrumb from './components/Breadcrumb'
+import './index.scss'
 
 const MainContent = () => {
   return (
-    <Layout.Content>
+    <Layout.Content className="layout-content">
       <Breadcrumb />
-      <Outlet />
+      <div className="layout-main-content">
+        <Outlet />
+      </div>
     </Layout.Content>
   )
 }
