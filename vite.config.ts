@@ -10,7 +10,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // target: 'http://192.168.1.177:8081',
-        target: 'https://cc3.zigin.ne',
+        target: 'https://cc3.zigin.net',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/')
       }

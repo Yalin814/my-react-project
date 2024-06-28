@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '/api/ccms'
+  baseURL: '/api/ccms',
+  withCredentials: true,
+  timeout: 5000
 })
 
 service.interceptors.request.use((reqConfig) => {
