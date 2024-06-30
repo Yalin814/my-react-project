@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@types/three": "^0.165.0",
-    "antd": "^5.16.1",
+    "antd": "^5.18.0",
     "axios": "^1.6.8",
     "cannon": "^0.6.2",
     "copy-text-to-clipboard": "^3.2.0",

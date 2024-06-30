@@ -1,8 +1,7 @@
 import { loadReportChart } from '@/api/ccms/evaluate'
-import { Modal } from 'antd'
-import { useEffect, useRef } from 'react'
+import { Modal, Spin } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts'
-import { ECBasicOption } from 'echarts/types/src/util/types.js'
 import './index.scss'
 
 const TrendChart = ({
@@ -11,11 +10,18 @@ const TrendChart = ({
   open = false,
   onCancel = () => {}
 }) => {
+  const [spinning, setSpinning] = useState(true)
   const chartRef = useRef(null)
   let trendChart: echarts.ECharts
 
   const initChart = () => {
-    const option: ECBasicOption = {
+    const option: {
+      [key: string]: any
+      series: {
+        data: number[] | string[]
+        [key: string]: any
+      }[]
+    } = {
       title: {
         text: title
       },
@@ -28,7 +34,7 @@ const TrendChart = ({
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: []
       },
       yAxis: {
         type: 'value',
@@ -44,52 +50,78 @@ const TrendChart = ({
         {
           name: '设备上传率',
           type: 'line',
-          data: [10, 11, 63, 11, 12, 12, 9],
+          data: [],
           markPoint: {
             data: [
-              { type: 'max', name: 'Max' },
-              { type: 'min', name: 'Min' }
-            ]
+              {
+                type: 'max',
+                name: 'Max',
+                tooltip: {
+                  trigger: 'item',
+                  formatter: '设备上传率<br/>上传率最高值：{c}'
+                }
+              },
+              {
+                type: 'min',
+                name: 'Min',
+                tooltip: {
+                  trigger: 'item',
+                  formatter: '设备上传率<br/>上传率最低值：{c}'
+                }
+              }
+            ],
+            label: {
+              show: true
+            }
           }
         },
         {
           name: '审核及时率',
           type: 'line',
-          data: [0, 15, 3, 11, 72, 12, 9]
+          data: []
         },
         {
           name: 'APP安装率',
           type: 'line',
-          data: [72, 12, 9, 0, 15, 3, 11]
+          data: []
         },
         {
           name: '冷链设备档案表完成率',
           type: 'line',
-          data: [9, 0, 72, 12, 15, 3, 11]
+          data: []
         }
       ]
     }
     if (chartRef.current) {
       trendChart = echarts.init(chartRef.current)
 
-      loadReportChart(deptId).then((res) => {
-        if (res.result) {
-          option.xAxis.data = res.result.map((item) => item.rateDate)
-          option.series[0].data = res.result.map((item) => (item.uploadRate * 100).toFixed(1))
-          option.series[1].data = res.result.map((item) => (item.checkRate * 100).toFixed(1))
-          option.series[2].data = res.result.map((item) => (item.appInstallRate * 100).toFixed(1))
-          option.series[3].data = res.result.map((item) =>
-            (item.equipmentCompRate * 100).toFixed(1)
-          )
-          trendChart.setOption(option)
-        }
-      })
+      loadReportChart(deptId)
+        .then((res) => {
+          setSpinning(false)
+          if (res.result) {
+            option.xAxis.data = res.result.map((item) => item.rateDate)
+            option.series[0]!.data = res.result.map((item) => (item.uploadRate * 100).toFixed(1))
+            option.series[1].data = res.result.map((item) => (item.checkRate * 100).toFixed(1))
+            option.series[2].data = res.result.map((item) => (item.appInstallRate * 100).toFixed(1))
+            option.series[3].data = res.result.map((item) =>
+              (item.equipmentCompRate * 100).toFixed(1)
+            )
+            trendChart.setOption(option)
+          }
+        })
+        .catch(() => {
+          setSpinning(false)
+        })
     }
   }
 
+  const handleCancel = () => {
+    onCancel()
+  }
+
   useEffect(() => {
-    if (open) initChart()
-  }, [open])
+    initChart()
+  }, [])
 
   return (
     <Modal
@@ -98,9 +130,11 @@ const TrendChart = ({
       width={1000}
       open={open}
       footer={null}
-      onCancel={onCancel}
+      onCancel={handleCancel}
     >
-      <div ref={chartRef} className="trend-chart" style={{ height: 400 }}></div>
+      <Spin spinning={spinning} tip="Loading...">
+        <div ref={chartRef} className="trend-chart" style={{ height: 400 }}></div>
+      </Spin>
     </Modal>
   )
 }

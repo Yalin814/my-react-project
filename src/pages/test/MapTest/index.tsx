@@ -3,18 +3,19 @@ import './index.scss'
 import { loadDepartmentChildren } from '@/api/ccms/evaluate'
 import { useSearchParams } from 'react-router-dom'
 import { loadDepartmentChildrenResp } from '@/api/ccms/evaluate/types'
-import { Button, Modal } from 'antd'
+import { Button } from 'antd'
 import TrendChart from './components/TrendChart'
 
 const MapTest = () => {
-  let map
+  const T = window.T
+  let map: typeof T
   const mapContainerRef = useRef(null)
   const [searchParams] = useSearchParams({
     // parentId: 'DE3D6637E277469CA4B2F241CC3035B0'
   })
   const [trendOpen, setTrendOpen] = useState(false)
 
-  let deptInfo = useRef<Partial<loadDepartmentChildrenResp>>({})
+  const deptInfo = useRef<Partial<loadDepartmentChildrenResp>>({})
 
   // let deptInfo: Partial<loadDepartmentChildrenResp> = {}
 
@@ -74,11 +75,11 @@ const MapTest = () => {
   }
 
   const goBack = () => {
-    fetchDepartmentChildren(deptInfo.parentId || '')
+    fetchDepartmentChildren(deptInfo.current.parentId || '')
   }
 
   const handleMarkerClick = (dept: loadDepartmentChildrenResp) => {
-    deptInfo = dept
+    deptInfo.current = dept
     if (dept.deptLevel == 4) map.setZoomAndCenter(15, new T.LngLat(dept.longitude, dept.latitude))
     else fetchDepartmentChildren(dept.id)
   }
@@ -141,7 +142,8 @@ const MapTest = () => {
                 position: latlng,
                 offset: new T.Point(-40, -56)
               })
-              map.addOverLay(label)
+
+              // map.addOverLay(label)
               marker.addEventListener('click', () => handleMarkerClick(dept))
               marker.addEventListener(
                 'contextmenu',
@@ -154,6 +156,12 @@ const MapTest = () => {
                   handleMarkerRightClick(dept)
                 }
               )
+              marker.addEventListener('mouseover', () => {
+                map.addOverLay(label)
+              })
+              marker.addEventListener('mouseout', () => {
+                map.removeOverLay(label)
+              })
               // const marker = new T.Marker(latlng, { icon: icon })
             })
         }
@@ -183,25 +191,25 @@ const MapTest = () => {
         上级部门
       </Button>
       <div className="custom-menu" style={menuStyle}>
-        <div>
+        <div onClick={hideMenu}>
           上传及时率：
           {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
             0.0}
           %
         </div>
-        <div>
+        <div onClick={hideMenu}>
           审核及时率：
           {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
             0.0}
           %
         </div>
-        <div>
+        <div onClick={hideMenu}>
           APP安装率：
           {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
             0.0}
           %
         </div>
-        <div>
+        <div onClick={hideMenu}>
           冷链设备档案表完成率：
           {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
             0.0}
@@ -216,12 +224,14 @@ const MapTest = () => {
         onCancel={handleCancel}
         footer={null}
       ></Modal> */}
-      <TrendChart
-        deptId={deptInfo.current.id}
-        title={deptInfo.current.deptDesc}
-        open={trendOpen}
-        onCancel={handleCancel}
-      />
+      {trendOpen && (
+        <TrendChart
+          deptId={deptInfo.current.id}
+          title={deptInfo.current.deptDesc}
+          open={trendOpen}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   )
 }

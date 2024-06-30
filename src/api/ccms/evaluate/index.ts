@@ -1,4 +1,6 @@
+import { ApiResponse } from '@/api/types'
 import service from '@/utils/request'
+import { loadDepartmentChildrenResp, loadReportChartResp } from './types'
 
 export enum EvaluationApi {
   LOAD_DEPARTMENT_CHILDREN = '/loadDepartmentChildren',
@@ -6,15 +8,18 @@ export enum EvaluationApi {
 }
 
 export function loadDepartmentChildren(parentId: string) {
-  return service.get(EvaluationApi.LOAD_DEPARTMENT_CHILDREN, {
-    params: {
-      parentId
+  return service.get<ApiResponse<loadDepartmentChildrenResp[]>>(
+    EvaluationApi.LOAD_DEPARTMENT_CHILDREN,
+    {
+      params: {
+        parentId
+      }
     }
-  })
+  )
 }
 
 export function loadReportChart(deptId: string) {
-  return service.get(EvaluationApi.LOAD_REPORT_CHART, {
+  return service.get<ApiResponse<loadReportChartResp[]>>(EvaluationApi.LOAD_REPORT_CHART, {
     params: {
       deptId
     }
