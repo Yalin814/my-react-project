@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import './index.scss'
 import { loadDepartmentChildren } from '@/api/ccms/evaluate'
 import { useSearchParams } from 'react-router-dom'
-import { loadDepartmentChildrenResp } from '@/api/ccms/evaluate/types'
+import { LoadDepartmentChildrenResp } from '@/api/ccms/evaluate/types'
 import { Button } from 'antd'
 import blue from '@/assets/images/point.png'
 
@@ -11,7 +11,7 @@ const MapTest = () => {
   let map: typeof T
   const mapContainerRef = useRef(null)
   const [searchParams] = useSearchParams({})
-  const deptInfo = useRef<Partial<loadDepartmentChildrenResp>>({})
+  const deptInfo = useRef<Partial<LoadDepartmentChildrenResp>>({})
 
   const initMap = () => {
     if (mapContainerRef.current) {
@@ -31,10 +31,31 @@ const MapTest = () => {
     fetchDepartmentChildren(deptInfo.current.parentId || '')
   }
 
-  const handleMarkerClick = (dept: loadDepartmentChildrenResp) => {
+  const addMarker = (dept: LoadDepartmentChildrenResp) => {
+    const icon = new T.Icon({
+      iconUrl: blue,
+      iconSize: new T.Point(19, 25),
+      iconAnchor: new T.Point(10, 25)
+    })
+    const latlng = new T.LngLat(dept.longitude, dept.latitude)
+    const marker = new T.Marker(latlng, { icon: icon })
+    map.addOverLay(marker)
+    const label = new T.Label({
+      text: dept.deptDesc,
+      position: latlng,
+      offset: new T.Point(-40, -40)
+    })
+    map.addOverLay(label)
+    marker.addEventListener('click', () => handleMarkerClick(dept))
+  }
+
+  const handleMarkerClick = (dept: LoadDepartmentChildrenResp) => {
     deptInfo.current = dept
-    if (dept.deptLevel == 4) map.setZoomAndCenter(15, new T.LngLat(dept.longitude, dept.latitude))
-    else fetchDepartmentChildren(dept.id)
+    if (dept.deptLevel == 4) {
+      map.clearOverLays()
+      addMarker(dept)
+      map.panTo(new T.LngLat(dept.longitude, dept.latitude), 6)
+    } else fetchDepartmentChildren(dept.id)
   }
 
   const fetchDepartmentChildren = (parentId: string = '') => {

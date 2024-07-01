@@ -1,4 +1,4 @@
-export interface loadDepartmentChildrenResp {
+export interface LoadDepartmentChildrenResp {
   abnormalCount: number
   deptCode: string
   deptDesc: string
@@ -12,7 +12,7 @@ export interface loadDepartmentChildrenResp {
   parentName: string
 }
 
-export interface loadReportChartResp {
+export interface LoadReportChartResp {
   deptId: string
   uploadRate: number
   alarmRate: number
