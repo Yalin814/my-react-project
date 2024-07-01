@@ -12,22 +12,25 @@ const Sidebar = () => {
   const [current, setCurrent] = useState('0')
   const [collapsed, setCollapsed] = useState(false)
   const items: MenuItem[] = useMemo(() => {
-    return constantRoutes.map((route, index) => ({
-      key: index + '',
-      icon: <MenuFoldOutlined />,
-      label:
-        route.children && route.children.length > 0 ? (
-          route.handle?.crumb
-        ) : route.handle && route.handle.menuType == MenuType.LINK ? (
-          <a href={route.path} target="_blank" onClick={(e) => e.stopPropagation()}>
-            {route.handle?.crumb}
-          </a>
-        ) : (
-          <NavLink to={route.path}>{route.handle?.crumb}</NavLink>
-        ),
-      title: route.handle?.crumb,
-      path: route.path
-    }))
+    return (
+      constantRoutes[0] &&
+      constantRoutes[0].children.map((route, index) => ({
+        key: index + '',
+        icon: <MenuFoldOutlined />,
+        label:
+          route.children && route.children.length > 0 ? (
+            route.handle?.crumb
+          ) : route.handle && route.handle.menuType == MenuType.LINK ? (
+            <a href={route.path} target="_blank" onClick={(e) => e.stopPropagation()}>
+              {route.handle?.crumb}
+            </a>
+          ) : (
+            <NavLink to={route.path}>{route.handle?.crumb}</NavLink>
+          ),
+        title: route.handle?.crumb,
+        path: route.path
+      }))
+    )
   }, [constantRoutes])
 
   // const items: MenuItem[] = []

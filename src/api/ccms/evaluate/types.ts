@@ -22,3 +22,19 @@ export interface loadReportChartResp {
   equipmentCompRate: number
   rateDate: string
 }
+
+export interface GetRateByDeptsReq {
+  deptId: string
+  date: string
+}
+
+export interface GetRateByDeptsResp {
+  alarmRate: number
+  appInstallRate: number
+  checkRate: number
+  deptId: string
+  equipmentCompRate: number
+  equipmentRate: number
+  rateDate: string
+  uploadRate: number
+}

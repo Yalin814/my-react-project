@@ -1,0 +1,18 @@
+.real-time-data {
+  .options {
+    text-align: right;
+    padding: 12px 0;
+  }
+  .ant-modal-content {
+    min-height: 600px;
+    // max-height: 800px;
+  }
+}
+
+.dropdown-menu {
+  width: 120px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 6px;
+}
