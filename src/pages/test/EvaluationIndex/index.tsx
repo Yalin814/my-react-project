@@ -17,7 +17,7 @@ const MapTest = () => {
   const T = window.T
   const map = useRef<typeof T>()
   const [messageApi, contextHolder] = message.useMessage()
-  const [spinning, setSpinning] = useState(false)
+  const [spinning, setSpinning] = useState(true)
   const mapContainerRef = useRef(null)
   const [searchParams] = useSearchParams({})
   const [trendOpen, setTrendOpen] = useState(false)
@@ -31,6 +31,13 @@ const MapTest = () => {
     left: 0
   })
   const initialValues = { year: dayjs().valueOf(), month: dayjs().valueOf() }
+  const deptStack = useRef<LoadDepartmentChildrenResp[]>([
+    {
+      id: JSON.parse(localStorage.getItem('ccmsCurrentDept') || '{}').deptId || '',
+      ...JSON.parse(localStorage.getItem('ccmsCurrentDept') || '{}')
+    } as LoadDepartmentChildrenResp
+  ])
+  const [searchForm] = Form.useForm<GetRateByDeptsReq>()
 
   const hideMenu = () => {
     setMenuStyle({
@@ -50,7 +57,7 @@ const MapTest = () => {
       map.current.addControl(control)
       map.current.addEventListener('click', hideMenu)
       map.current.addEventListener('zoomstart', hideMenu)
-      map.current.addEventListener('dragStart', hideMenu)
+      map.current.addEventListener('dragstart', hideMenu)
       map.current.addEventListener('contextmenu', hideMenu)
 
       // const parentId = searchParams.get('parentId')
@@ -59,11 +66,13 @@ const MapTest = () => {
       //   return
       // }
       // fetchDepartmentChildren(parentId || '')
-      if (!deptInfo.current.deptId) {
+      if (!deptInfo.current.id) {
         messageApi.warning('请选择部门！')
+        setSpinning(false)
         return
       }
-      fetchDepartmentChildren(deptInfo.current.deptId || '')
+      if (deptStack.current && deptStack.current.length > 0)
+        fetchDepartmentChildren(deptStack.current[deptStack.current.length - 1].id)
     }
   }
 
@@ -96,20 +105,25 @@ const MapTest = () => {
     marker.addEventListener('contextmenu', (e: { containerPoint: { x: number; y: number } }) => {
       setMenuStyle({
         display: 'block',
-        left: e.containerPoint.x + 'px',
-        top: e.containerPoint.y - 10 + 'px'
+        left: e.containerPoint.x + 216 + 'px',
+        top: e.containerPoint.y + 179 + 'px'
       })
       handleMarkerRightClick(dept)
     })
   }
 
   const goBack = () => {
-    console.log(map)
-    fetchDepartmentChildren(deptInfo.current.parentId || '')
+    if (deptStack.current && deptStack.current.length > 1) {
+      deptStack.current.pop()
+      fetchDepartmentChildren(deptStack.current[deptStack.current.length - 1].id)
+    }
   }
 
   const handleMarkerClick = (dept: LoadDepartmentChildrenResp) => {
-    deptInfo.current = dept
+    hideMenu()
+    const i = deptStack.current.findIndex((item) => item.id == dept.id)
+    if (i == -1) deptStack.current.push(dept)
+    else return
     if (dept.deptLevel == 4) {
       map.current.clearOverLays()
       addMarker(dept)
@@ -121,39 +135,40 @@ const MapTest = () => {
     deptInfo.current = dept
   }
 
-  const fetchRateByDepts = async (date: string) => {
-    const reqData: GetRateByDeptsReq = {
-      deptId: deptInfo.current.parentId || '',
-      date
-    }
-    await getRateByDepts(reqData).then((res) => {})
-  }
-
   const fetchDepartmentChildren = (parentId: string = '') => {
     map.current.clearOverLays()
     loadDepartmentChildren(parentId)
       .then((res) => {
         if (res.result) {
           const deptList = res.result
-            .concat(...[deptInfo.current])
+            .concat([deptStack.current[deptStack.current.length - 1]])
             .filter((dept) => dept.longitude != null && dept.latitude != null)
           const reqData: GetRateByDeptsReq = {
-            deptId: deptInfo.current.parentId || '',
-            date: dayjs().format('YYYY-MM')
+            deptId: parentId,
+            date: dayjs(searchForm.getFieldsValue().year).format('YYYY-MM')
           }
-          getRateByDepts(reqData).then((res) => {
-            if (res.result) {
-              deptList.forEach((dept) => {
-                const rateData = res.result.find((item) => item.deptId == dept.id)
-                dept.rateData = rateData
-                addMarker(dept)
-              })
-            }
-          })
+          map.current.setViewport(
+            deptList.map((item) => new T.LngLat(item.longitude, item.latitude))
+          )
+          getRateByDepts(reqData)
+            .then((res) => {
+              if (res.result) {
+                deptList.forEach((dept) => {
+                  const rateData = res.result.find((item) => item.deptId == dept.id)
+                  dept.rateData = rateData
+                  addMarker(dept)
+                })
+              }
+            })
+            .finally(() => {
+              setSpinning(false)
+            })
+        } else {
+          setSpinning(false)
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        setSpinning(false)
       })
   }
 
@@ -166,10 +181,10 @@ const MapTest = () => {
     setTrendOpen(false)
   }
 
-  const handleFinish: FormProps['onFinish'] = async (values) => {
+  const handleFinish: FormProps['onFinish'] = () => {
     setSpinning(true)
-    await fetchRateByDepts(dayjs(values.year).format('YYYY-MM'))
-    setSpinning(false)
+    if (deptStack.current && deptStack.current.length > 0)
+      fetchDepartmentChildren(deptStack.current[deptStack.current.length - 1].id)
   }
 
   useEffect(() => {
@@ -179,7 +194,12 @@ const MapTest = () => {
   return (
     <div className="map-container">
       {contextHolder}
-      <Form className="search-form" onFinish={handleFinish} initialValues={initialValues}>
+      <Form
+        form={searchForm}
+        className="search-form"
+        onFinish={handleFinish}
+        initialValues={initialValues}
+      >
         <Row gutter={[12, 12]}>
           <Col>
             <Form.Item
@@ -226,25 +246,33 @@ const MapTest = () => {
       <div className="custom-menu" style={menuStyle}>
         <div onClick={hideMenu}>
           上传及时率：
-          {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
+          {(deptInfo.current.rateData &&
+            deptInfo.current.rateData.uploadRate != null &&
+            (deptInfo.current.rateData.uploadRate * 100).toFixed(1)) ||
             0.0}
           %
         </div>
         <div onClick={hideMenu}>
           审核及时率：
-          {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
+          {(deptInfo.current.rateData &&
+            deptInfo.current.rateData.checkRate != null &&
+            (deptInfo.current.rateData.checkRate * 100).toFixed(1)) ||
             0.0}
           %
         </div>
         <div onClick={hideMenu}>
           APP安装率：
-          {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
+          {(deptInfo.current.rateData &&
+            deptInfo.current.rateData.appInstallRate != null &&
+            (deptInfo.current.rateData.appInstallRate * 100).toFixed(1)) ||
             0.0}
           %
         </div>
         <div onClick={hideMenu}>
           冷链设备档案表完成率：
-          {(deptInfo.current.deptLevel != null && (deptInfo.current.deptLevel * 100).toFixed(1)) ||
+          {(deptInfo.current.rateData &&
+            deptInfo.current.rateData.equipmentCompRate != null &&
+            (deptInfo.current.rateData.equipmentCompRate * 100).toFixed(1)) ||
             0.0}
           %
         </div>

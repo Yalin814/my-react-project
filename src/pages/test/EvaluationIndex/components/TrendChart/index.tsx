@@ -4,12 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts'
 import './index.scss'
 
-const TrendChart = ({
-  title = '',
-  deptId = '30D442E53F2F4A1A91A096AFEBBADAF6',
-  open = false,
-  onCancel = () => {}
-}) => {
+const TrendChart = ({ title = '', deptId = '', open = false, onCancel = () => {} }) => {
   const [spinning, setSpinning] = useState(true)
   const chartRef = useRef(null)
   let trendChart: echarts.ECharts
@@ -24,6 +19,9 @@ const TrendChart = ({
     } = {
       title: {
         text: title
+      },
+      grid: {
+        top: 70
       },
       tooltip: {
         trigger: 'axis'

@@ -41,6 +41,8 @@ export interface LoadReportChartResp {
 export interface GetRateByDeptsReq {
   deptId: string
   date: string
+  year?: number
+  month?: number
 }
 
 export interface GetRateByDeptsResp {
