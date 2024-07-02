@@ -1,5 +1,5 @@
 import { loadSensorsByDeptId } from '@/api/ccms/cab'
-import { LoadSensorsByDeptIdResp } from '@/api/ccms/cab/types'
+import { LoadSensorsByDeptIdResp, SensorType, sensorTypeKV } from '@/api/ccms/cab/types'
 import {
   Modal,
   Dropdown,
@@ -81,8 +81,8 @@ const RealTimeData = ({ open = false, deptId = '', onCancel = () => {} }) => {
     },
     {
       title: '传感器状态',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'remark',
+      key: 'remark',
       render(text) {
         return text || '-'
       }
@@ -92,7 +92,7 @@ const RealTimeData = ({ open = false, deptId = '', onCancel = () => {} }) => {
       dataIndex: 'sensorType',
       key: 'sensorType',
       render(text) {
-        return text || '-'
+        return text ? sensorTypeKV[text as SensorType] : '-'
       }
     }
   ]
@@ -181,17 +181,29 @@ const RealTimeData = ({ open = false, deptId = '', onCancel = () => {} }) => {
         ></Table>
       ) : (
         <List
+          bordered
           className="data-list"
+          loading={loading}
           dataSource={dataSource}
           rowKey={(item) => item.id}
           renderItem={(item) => (
             <div className="list-item" key={item.id}>
-              {newColumns.map((column) => (
-                <div className="list-item-row" key={column.key}>
-                  <span>{column.title + ''}</span>
-                  <span>{item[column.key + '']}</span>
-                </div>
-              ))}
+              {newColumns
+                .filter((column) => !column.hidden)
+                .map((column) => (
+                  <div className="list-item-row" key={column.key}>
+                    <span>{column.title + ''}</span>
+                    {column.key == 'sensorType' ? (
+                      <span>
+                        {item[column.key + ''] == null
+                          ? '-'
+                          : sensorTypeKV[item[column.key + ''] as SensorType]}
+                      </span>
+                    ) : (
+                      <span>{item[column.key + ''] == null ? '-' : item[column.key + '']}</span>
+                    )}
+                  </div>
+                ))}
             </div>
           )}
         ></List>

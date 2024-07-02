@@ -13,6 +13,7 @@ export interface LoadCabDeptChildResp {
   parentId: string
   parentName: string
   province: string
+  deptId?: string
 }
 
 export interface LoadSensorsByDeptIdReq {
@@ -40,10 +41,24 @@ export interface LoadSensorsByDeptIdResp {
   reportedTemperatureDept: string
   sensorDesc: string
   sensorId: string
-  sensorType: string
+  sensorType: SensorType
   sn: string
   tStatus: number
   tempStatus: number
   voltage: number
   [key: string]: number | string
+}
+
+export enum SensorType {
+  SINGLE_TEMP = '01',
+  SINGLE_LABEL = '02',
+  SENSOR = '03',
+  LABEL = '04'
+}
+
+export const sensorTypeKV: Record<SensorType, string> = {
+  [SensorType.SINGLE_TEMP]: '单温探头',
+  [SensorType.SINGLE_LABEL]: '单温标签',
+  [SensorType.SENSOR]: '温湿度探头',
+  [SensorType.LABEL]: '温湿度标签'
 }

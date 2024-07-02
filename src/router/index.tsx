@@ -24,7 +24,7 @@ export const constantRoutes = [
     path: '/',
     element: <App />,
     handle: {
-      crumb: '平台'
+      crumb: '冷链云'
     },
     children: [
       {

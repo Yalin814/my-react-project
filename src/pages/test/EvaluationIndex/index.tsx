@@ -3,19 +3,28 @@ import './index.scss'
 import { getRateByDepts, loadDepartmentChildren } from '@/api/ccms/evaluate'
 import { useSearchParams } from 'react-router-dom'
 import { GetRateByDeptsReq, LoadDepartmentChildrenResp } from '@/api/ccms/evaluate/types'
-import { Button, Form, Row, Col, DatePicker, FormProps, Spin } from 'antd'
+import { Button, Form, Row, Col, DatePicker, FormProps, Spin, message } from 'antd'
 import TrendChart from './components/TrendChart'
 import { FileSearchOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import red from '@/assets/images/point10.png'
+import green from '@/assets/images/point100.png'
+import blue from '@/assets/images/point99.png'
+import yellow from '@/assets/images/point80.png'
+import orange from '@/assets/images/point50.png'
 
 const MapTest = () => {
   const T = window.T
-  let map: typeof T
-  const [spinning, setSpinning] = useState(true)
+  const map = useRef<typeof T>()
+  const [messageApi, contextHolder] = message.useMessage()
+  const [spinning, setSpinning] = useState(false)
   const mapContainerRef = useRef(null)
   const [searchParams] = useSearchParams({})
   const [trendOpen, setTrendOpen] = useState(false)
-  const deptInfo = useRef<LoadDepartmentChildrenResp>({} as LoadDepartmentChildrenResp)
+  const deptInfo = useRef<LoadDepartmentChildrenResp>({
+    id: JSON.parse(localStorage.getItem('ccmsCurrentDept') || '{}').deptId || '',
+    ...JSON.parse(localStorage.getItem('ccmsCurrentDept') || '{}')
+  } as LoadDepartmentChildrenResp)
   const [menuStyle, setMenuStyle] = useState<CSSProperties>({
     display: 'none',
     top: 0,
@@ -33,42 +42,56 @@ const MapTest = () => {
 
   const initMap = () => {
     if (mapContainerRef.current) {
-      map = new T.Map(mapContainerRef.current)
-      map.centerAndZoom(new T.LngLat(120.234488, 30.313231), 6)
-      map.enableInertia()
-      map.enableDrag()
+      map.current = new T.Map(mapContainerRef.current)
+      map.current.centerAndZoom(new T.LngLat(120.234488, 30.313231), 6)
+      map.current.enableInertia()
+      map.current.enableDrag()
       const control = new T.Control.Zoom()
-      map.addControl(control)
-      map.addEventListener('click', hideMenu)
-      map.addEventListener('zoomstart', hideMenu)
-      map.addEventListener('dragStart', hideMenu)
-      map.addEventListener('contextmenu', hideMenu)
+      map.current.addControl(control)
+      map.current.addEventListener('click', hideMenu)
+      map.current.addEventListener('zoomstart', hideMenu)
+      map.current.addEventListener('dragStart', hideMenu)
+      map.current.addEventListener('contextmenu', hideMenu)
 
-      const parentId = searchParams.get('parentId')
-      Promise.all([
-        fetchDepartmentChildren(parentId || ''),
-        fetchRateByDepts(dayjs().format('YYYY-MM'))
-      ]).finally(() => {
-        setSpinning(false)
-      })
+      // const parentId = searchParams.get('parentId')
+      // if (!parentId) {
+      //   messageApi.warning('请选择部门！')
+      //   return
+      // }
+      // fetchDepartmentChildren(parentId || '')
+      if (!deptInfo.current.deptId) {
+        messageApi.warning('请选择部门！')
+        return
+      }
+      fetchDepartmentChildren(deptInfo.current.deptId || '')
     }
   }
 
   const addMarker = (dept: LoadDepartmentChildrenResp) => {
+    const uploadRate = dept.rateData?.uploadRate == null ? null : dept.rateData.uploadRate * 100
     const icon = new T.Icon({
-      iconUrl: 'http://api.tianditu.gov.cn/img/map/markerA.png',
-      iconSize: new T.Point(19, 27),
+      iconUrl:
+        uploadRate == null || uploadRate <= 10
+          ? red
+          : uploadRate == 100
+          ? green
+          : uploadRate > 80 && uploadRate <= 99
+          ? blue
+          : uploadRate > 50 && uploadRate <= 80
+          ? yellow
+          : orange,
+      iconSize: new T.Point(19, 25),
       iconAnchor: new T.Point(10, 25)
     })
     const latlng = new T.LngLat(dept.longitude, dept.latitude)
-    const marker = new T.Marker(latlng)
-    map.addOverLay(marker)
+    const marker = new T.Marker(latlng, { icon: icon })
+    map.current.addOverLay(marker)
     const label = new T.Label({
       text: dept.deptDesc,
       position: latlng,
-      offset: new T.Point(-40, -56)
+      offset: new T.Point(-40, -40)
     })
-    map.addOverLay(label)
+    map.current.addOverLay(label)
     marker.addEventListener('click', () => handleMarkerClick(dept))
     marker.addEventListener('contextmenu', (e: { containerPoint: { x: number; y: number } }) => {
       setMenuStyle({
@@ -88,9 +111,9 @@ const MapTest = () => {
   const handleMarkerClick = (dept: LoadDepartmentChildrenResp) => {
     deptInfo.current = dept
     if (dept.deptLevel == 4) {
-      map.clearOverLays()
+      map.current.clearOverLays()
       addMarker(dept)
-      map.panTo(new T.LngLat(dept.longitude, dept.latitude), 6)
+      map.current.panTo(new T.LngLat(dept.longitude, dept.latitude), 6)
     } else fetchDepartmentChildren(dept.id)
   }
 
@@ -106,43 +129,27 @@ const MapTest = () => {
     await getRateByDepts(reqData).then((res) => {})
   }
 
-  const fetchDepartmentChildren = async (parentId: string = '') => {
-    map.clearOverLays()
-    await loadDepartmentChildren(parentId)
+  const fetchDepartmentChildren = (parentId: string = '') => {
+    map.current.clearOverLays()
+    loadDepartmentChildren(parentId)
       .then((res) => {
         if (res.result) {
-          res.result
+          const deptList = res.result
+            .concat(...[deptInfo.current])
             .filter((dept) => dept.longitude != null && dept.latitude != null)
-            .map((dept) => {
-              const icon = new T.Icon({
-                iconUrl: 'http://api.tianditu.gov.cn/img/map/markerA.png',
-                iconSize: new T.Point(19, 27),
-                iconAnchor: new T.Point(10, 25)
+          const reqData: GetRateByDeptsReq = {
+            deptId: deptInfo.current.parentId || '',
+            date: dayjs().format('YYYY-MM')
+          }
+          getRateByDepts(reqData).then((res) => {
+            if (res.result) {
+              deptList.forEach((dept) => {
+                const rateData = res.result.find((item) => item.deptId == dept.id)
+                dept.rateData = rateData
+                addMarker(dept)
               })
-              const latlng = new T.LngLat(dept.longitude, dept.latitude)
-              // const marker = new T.Marker(latlng)
-              const marker = new T.Marker(latlng, { icon: icon })
-              map.addOverLay(marker)
-              const label = new T.Label({
-                text: dept.deptDesc,
-                position: latlng,
-                offset: new T.Point(-40, -56)
-              })
-
-              map.addOverLay(label)
-              marker.addEventListener('click', () => handleMarkerClick(dept))
-              marker.addEventListener(
-                'contextmenu',
-                (e: { containerPoint: { x: number; y: number } }) => {
-                  setMenuStyle({
-                    display: 'block',
-                    left: e.containerPoint.x + 'px',
-                    top: e.containerPoint.y - 10 + 'px'
-                  })
-                  handleMarkerRightClick(dept)
-                }
-              )
-            })
+            }
+          })
         }
       })
       .catch((err) => {
@@ -171,6 +178,7 @@ const MapTest = () => {
 
   return (
     <div className="map-container">
+      {contextHolder}
       <Form className="search-form" onFinish={handleFinish} initialValues={initialValues}>
         <Row gutter={[12, 12]}>
           <Col>

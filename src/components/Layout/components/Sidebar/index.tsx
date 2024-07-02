@@ -48,7 +48,7 @@ const Sidebar = () => {
   return (
     <Layout.Sider className="layout-sider" collapsible collapsed={collapsed} trigger={null}>
       <div className="layout-sider-title" style={{ display: collapsed ? 'block' : 'flex' }}>
-        {!collapsed && <span>平台</span>}
+        {!collapsed && <span>冷链云</span>}
         <MenuFoldOutlined
           style={{ fontSize: '16px', color: 'var(--color-primary)' }}
           onClick={toggleCollapsed}

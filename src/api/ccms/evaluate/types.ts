@@ -10,6 +10,21 @@ export interface LoadDepartmentChildrenResp {
   longitude: string
   parentId: string
   parentName: string
+  rateData?: GetRateByDeptsResp
+  deptId?: string
+}
+
+export interface CurrentDept {
+  deptCode: string
+  deptDesc: string
+  deptId: string
+  deptLevel: string
+  deptType: string
+  hasChild: string
+  latitude: string
+  longitude: string
+  parentName: string
+  tId: string
 }
 
 export interface LoadReportChartResp {
