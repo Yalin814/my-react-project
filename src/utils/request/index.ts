@@ -12,9 +12,11 @@ service.interceptors.request.use((reqConfig) => {
 
 service.interceptors.response.use(
   (resp) => {
+    console.log(resp)
     return resp.data
   },
   (err) => {
+    console.log(err)
     return Promise.reject(err)
   }
 )
