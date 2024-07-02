@@ -124,11 +124,14 @@ const MapTest = () => {
     const i = deptStack.current.findIndex((item) => item.id == dept.id)
     if (i == -1) deptStack.current.push(dept)
     else return
-    if (dept.deptLevel == 4) {
+    if (dept.hasChild == '0') {
       map.current.clearOverLays()
       addMarker(dept)
       map.current.panTo(new T.LngLat(dept.longitude, dept.latitude), 6)
-    } else fetchDepartmentChildren(dept.id)
+    } else {
+      setSpinning(true)
+      fetchDepartmentChildren(dept.id)
+    }
   }
 
   const handleMarkerRightClick = (dept: LoadDepartmentChildrenResp) => {
@@ -143,18 +146,21 @@ const MapTest = () => {
           const deptList = res.result
             .concat([deptStack.current[deptStack.current.length - 1]])
             .filter((dept) => dept.longitude != null && dept.latitude != null)
+
+          map.current.setViewport(
+            deptList.map((item) => new T.LngLat(item.longitude, item.latitude))
+          )
           const reqData: GetRateByDeptsReq = {
             deptId: parentId,
             date: dayjs(searchForm.getFieldsValue().year).format('YYYY-MM')
           }
-          map.current.setViewport(
-            deptList.map((item) => new T.LngLat(item.longitude, item.latitude))
-          )
           getRateByDepts(reqData)
             .then((res) => {
               if (res.result) {
                 deptList.forEach((dept) => {
-                  const rateData = res.result.find((item) => item.deptId == dept.id)
+                  const rateData = res.result
+                    .filter((item) => item && item.deptId)
+                    .find((item) => item.deptId == dept.id)
                   dept.rateData = rateData
                   addMarker(dept)
                 })
