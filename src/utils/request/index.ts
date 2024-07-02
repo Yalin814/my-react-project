@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import axios from 'axios'
 
 const service = axios.create({
@@ -12,11 +13,16 @@ service.interceptors.request.use((reqConfig) => {
 
 service.interceptors.response.use(
   (resp) => {
-    console.log(resp)
     return resp.data
   },
   (err) => {
-    console.log(err)
+    if (axios.isAxiosError(err)) {
+      if (err.message === 'Network Error') {
+        message.error({ content: '网络错误, 请稍后再试！' })
+      } else {
+        message.error({ content: '未知错误！' })
+      }
+    }
     return Promise.reject(err)
   }
 )
