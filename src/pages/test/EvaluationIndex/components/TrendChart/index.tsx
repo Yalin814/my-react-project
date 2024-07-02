@@ -24,7 +24,8 @@ const TrendChart = ({ title = '', deptId = '', open = false, onCancel = () => {}
         top: 70
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        valueFormatter: (value: string) => Number(value).toFixed(1)
       },
       legend: {
         right: 20
