@@ -21,5 +21,8 @@
   .map {
     height: 100%;
     width: 100%;
+    .tdt-overlay-pane {
+      z-index: 999;
+    }
   }
 }
