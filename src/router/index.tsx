@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { RouteObject, createBrowserRouter } from 'react-router-dom'
 import App from '../App'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
@@ -19,7 +19,7 @@ import Workbench from '@/pages/Test/Workbench'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
-export const constantRoutes = [
+export const constantRoutes: RouteObject[] = [
   {
     path: '/',
     element: <App />,

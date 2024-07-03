@@ -3,3 +3,5 @@ declare global {
     T: any
   }
 }
+
+export {}
