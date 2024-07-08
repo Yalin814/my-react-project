@@ -16,6 +16,7 @@ import { MenuType } from '@/types/common'
 import EvaluationIndex from '@/pages/Test/EvaluationIndex'
 import Cockpit from '@/pages/Test/Cockpit'
 import Workbench from '@/pages/Test/Workbench'
+import UseImmer from '@/pages/ReactTest/UseImmer'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -28,27 +29,33 @@ export const constantRoutes: RouteObject[] = [
     },
     children: [
       {
-        path: '/workbench',
-        element: <Workbench />,
+        path: 'useImmer',
+        element: <UseImmer />,
         handle: {
-          crumb: '工作台'
-        }
-      },
-
-      {
-        path: '/cockpit',
-        element: <Cockpit />,
-        handle: {
-          crumb: '驾驶舱'
-        }
-      },
-      {
-        path: '/evaluationIndex',
-        element: <EvaluationIndex />,
-        handle: {
-          crumb: '评价指标'
+          crumb: 'useImmer'
         }
       }
+      // {
+      //   path: '/workbench',
+      //   element: <Workbench />,
+      //   handle: {
+      //     crumb: '工作台'
+      //   }
+      // },
+      // {
+      //   path: '/cockpit',
+      //   element: <Cockpit />,
+      //   handle: {
+      //     crumb: '驾驶舱'
+      //   }
+      // },
+      // {
+      //   path: '/evaluationIndex',
+      //   element: <EvaluationIndex />,
+      //   handle: {
+      //     crumb: '评价指标'
+      //   }
+      // }
       // {
       //   path: 'dashboard/:id',
       //   element: <Dashboard />
