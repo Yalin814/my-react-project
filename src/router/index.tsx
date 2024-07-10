@@ -18,6 +18,7 @@ import Cockpit from '@/pages/Test/Cockpit'
 import Workbench from '@/pages/Test/Workbench'
 import UseImmer from '@/pages/ReactTest/UseImmer'
 import OLTest from '@/pages/OLTest'
+import GDTest from '@/pages/GDTest'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -34,6 +35,13 @@ export const constantRoutes: RouteObject[] = [
         element: <OLTest />,
         handle: {
           crumb: 'OLTest'
+        }
+      },
+      {
+        path: 'gdTest',
+        element: <GDTest />,
+        handle: {
+          crumb: 'GDTest'
         }
       }
       // {

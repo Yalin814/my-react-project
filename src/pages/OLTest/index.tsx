@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
@@ -18,14 +18,31 @@ import { defaults } from 'ol/control'
 import { baiduToA } from '@/utils/coordtransform'
 import Select from 'ol/interaction/Select'
 import { click } from 'ol/events/condition.js'
+import { Modal } from 'antd'
+import * as Extent from 'ol/extent'
 
 const OLTest = () => {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>({
+    display: 'none',
+    top: 0,
+    left: 0
+  })
   const map = useRef<Map>()
   const mapRef = useRef<HTMLDivElement>(null)
   const amapSource = new XYZ({
     url: 'https://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+    // url: 'http://t4.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=9d5c2c2c02e274b2266dc99432c12c7d',
     crossOrigin: 'anonymous'
   })
+
+  const hideMenu = () => {
+    setMenuStyle({
+      display: 'none',
+      top: 0,
+      left: 0
+    })
+  }
 
   const addMarker = () => {
     const icon = new Icon({
@@ -37,7 +54,23 @@ const OLTest = () => {
     const style = new Style({
       image: icon,
       text: new Text({
-        text: '杭州市疾病预防控制中心',
+        text: '1',
+        font: '14px sans-serif', // 字体
+        fill: new Fill({
+          color: '#000000'
+        }),
+        backgroundFill: new Fill({
+          color: '#ffffff'
+        }),
+        textAlign: 'left',
+        padding: [4, 10, 4, 10],
+        offsetY: -50
+      })
+    })
+    const style1 = new Style({
+      image: icon,
+      text: new Text({
+        text: '2',
         font: '14px sans-serif', // 字体
         fill: new Fill({
           color: '#000000'
@@ -51,11 +84,23 @@ const OLTest = () => {
       })
     })
     const feature = new Feature({
-      geometry: new Point(fromLonLat(baiduToA([120.290841, 30.402791])))
+      geometry: new Point(fromLonLat(baiduToA([120.290841, 30.402791]))),
+      properties: {
+        id: '1'
+      }
+    })
+
+    const feature1 = new Feature({
+      geometry: new Point(fromLonLat(baiduToA([120.390841, 30.402791]))),
+      properties: {
+        id: '2'
+      }
     })
     feature.setStyle(style)
+    feature1.setStyle(style1)
     const vectorSource = (map.current.getLayers().item(1) as VectorLayer<Feature>).getSource()
     vectorSource.addFeature(feature)
+    vectorSource.addFeature(feature1)
   }
 
   const initMap = () => {
@@ -66,7 +111,7 @@ const OLTest = () => {
         center: fromLonLat([120.173018, 30.191416]),
         zoom: 9,
         minZoom: 4,
-        maxZoom: 19
+        maxZoom: 18
       }),
       layers: [
         new TileLayer({ source: amapSource }),
@@ -77,21 +122,163 @@ const OLTest = () => {
     })
 
     const select = new Select({
-      condition: click
+      toggleCondition: click,
+      multi: false,
+      condition: click,
+      style: function (feature) {
+        const id = feature.get('properties').id
+        const icon = new Icon({
+          src: blue,
+          anchor: [0, 34],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels'
+        })
+        const style = new Style({
+          image: icon,
+          text: new Text({
+            text: id,
+            font: '14px sans-serif', // 字体
+            fill: new Fill({
+              color: '#000000'
+            }),
+            backgroundFill: new Fill({
+              color: '#ffffff'
+            }),
+            textAlign: 'left',
+            padding: [4, 10, 4, 10],
+            offsetY: -50
+          })
+        })
+        return [style]
+      }
     })
+
+    const select1 = new Select({
+      toggleCondition: (e) => {
+        return e.type === 'contextmenu'
+      },
+      multi: false,
+      condition: (e) => {
+        return e.type === 'contextmenu'
+      },
+      style: function (feature) {
+        const id = feature.get('properties').id
+        const icon = new Icon({
+          src: blue,
+          anchor: [0, 34],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels'
+        })
+        const style = new Style({
+          image: icon,
+          text: new Text({
+            text: id,
+            font: '14px sans-serif', // 字体
+            fill: new Fill({
+              color: '#000000'
+            }),
+            backgroundFill: new Fill({
+              color: '#ffffff'
+            }),
+            textAlign: 'left',
+            padding: [4, 10, 4, 10],
+            offsetY: -50
+          })
+        })
+        return [style]
+      }
+    })
+
     select.on('select', (e) => {
       console.log(e)
       const view = map.current.getView()
-      view.setCenter(e.mapBrowserEvent.coordinate)
+      // view.setCenter(e.mapBrowserEvent.coordinate)
+      const feature = e.selected.concat(e.deselected)[0]
+      console.log(feature.get('properties'))
+      setModalOpen(true)
     })
-    map.current.addInteraction(select)
+
+    select1.on('select', (e) => {
+      const view = map.current.getView()
+      // view.setCenter(e.mapBrowserEvent.coordinate)
+      console.log(e)
+      const feature = e.selected.concat(e.deselected)[0]
+
+      const pixel = map.current.getPixelFromCoordinate(e.mapBrowserEvent.coordinate)
+      setMenuStyle({
+        display: 'block',
+        left: pixel[0] + 'px',
+        top: pixel[1] + 'px'
+      })
+    })
+
+    // map.current.addInteraction(select)
+    map.current.addInteraction(select1)
     addMarker()
+    const extent = Extent.boundingExtent([
+      fromLonLat(baiduToA([120.290841, 30.402791])),
+      fromLonLat(baiduToA([120.390841, 30.402791]))
+    ])
+
+    map.current.getView().fit(extent, {
+      size: map.current.getSize(),
+      padding: [280, 280, 280, 280]
+    })
+    map.current.on('pointermove', function (e) {
+      map.current.getTargetElement().style.cursor = map.current.hasFeatureAtPixel(e.pixel)
+        ? 'pointer'
+        : ''
+    })
+    map.current.on('click', () => {
+      hideMenu()
+    })
+    map.current.on('movestart', () => {
+      hideMenu()
+    })
   }
+
+  const handleCancel = () => {
+    setModalOpen(false)
+  }
+
   useEffect(() => {
     initMap()
+    addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+    })
+
+    return () => {
+      removeEventListener('contextmenu', (e) => {
+        e.preventDefault()
+      })
+    }
   }, [])
 
-  return <div className="ol-map" ref={mapRef}></div>
+  return (
+    <div className="ol-map">
+      <div className="map-container" ref={mapRef}></div>
+      {modalOpen && <Modal open={modalOpen} onCancel={handleCancel} />}
+      <div className="custom-menu" style={menuStyle}>
+        <div onClick={hideMenu}>
+          上传及时率：
+          {0.0}%
+        </div>
+        <div onClick={hideMenu}>
+          审核及时率：
+          {0.0}%
+        </div>
+        <div onClick={hideMenu}>
+          APP安装率：
+          {0.0}%
+        </div>
+        <div onClick={hideMenu}>
+          冷链设备档案表完成率：
+          {0.0}%
+        </div>
+        <div onClick={hideMenu}>趋势</div>
+      </div>
+    </div>
+  )
 }
 
 export default OLTest
