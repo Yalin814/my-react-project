@@ -30,9 +30,15 @@ const OLTest = () => {
   })
   const map = useRef<Map>()
   const mapRef = useRef<HTMLDivElement>(null)
-  const amapSource = new XYZ({
-    url: 'https://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
-    // url: 'http://t4.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=9d5c2c2c02e274b2266dc99432c12c7d',
+  const baseSource = new XYZ({
+    // url: 'https://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+    url: 'http://t4.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=9d5c2c2c02e274b2266dc99432c12c7d',
+    crossOrigin: 'anonymous'
+  })
+
+  const markupSource = new XYZ({
+    // url: 'https://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
+    url: 'http://t4.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=9d5c2c2c02e274b2266dc99432c12c7d',
     crossOrigin: 'anonymous'
   })
 
@@ -98,7 +104,7 @@ const OLTest = () => {
     })
     feature.setStyle(style)
     feature1.setStyle(style1)
-    const vectorSource = (map.current.getLayers().item(1) as VectorLayer<Feature>).getSource()
+    const vectorSource = (map.current.getLayers().item(2) as VectorLayer<Feature>).getSource()
     vectorSource.addFeature(feature)
     vectorSource.addFeature(feature1)
   }
@@ -114,7 +120,8 @@ const OLTest = () => {
         maxZoom: 18
       }),
       layers: [
-        new TileLayer({ source: amapSource }),
+        new TileLayer({ source: baseSource }),
+        new TileLayer({ source: markupSource }),
         new VectorLayer({
           source: new VectorSource()
         })
