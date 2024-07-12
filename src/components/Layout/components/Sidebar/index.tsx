@@ -22,7 +22,11 @@ const Sidebar = () => {
           route.children && route.children.length > 0 ? (
             route.handle?.crumb
           ) : route.handle && route.handle.menuType == MenuType.LINK ? (
-            <a href={route.path} target="_blank" onClick={(e) => e.stopPropagation()}>
+            <a
+              href={path ? `${path}/${route.path}` : route.path}
+              target="_blank"
+              onClick={(e) => e.stopPropagation()}
+            >
               {route.handle?.crumb}
             </a>
           ) : (
@@ -31,10 +35,14 @@ const Sidebar = () => {
             </NavLink>
           ),
         title: route.handle?.crumb,
-        path: route.path,
+        path: path ? `${path}/${route.path}` : route.path,
         children:
           route.children && route.children.length > 0
-            ? generateMenu(route.children, route.path, index + '-')
+            ? generateMenu(
+                route.children,
+                path ? `${path}/${route.path}` : route.path,
+                prefix + index + '-'
+              )
             : null
       }
     })
