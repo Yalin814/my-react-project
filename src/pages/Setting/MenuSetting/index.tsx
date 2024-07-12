@@ -1,8 +1,20 @@
-import { Form, Select, Col, Row, FormProps, Button, Input, TreeSelect } from 'antd'
+import {
+  Form,
+  Select,
+  Col,
+  Row,
+  FormProps,
+  Button,
+  Input,
+  TreeSelect,
+  Radio,
+  InputNumber
+} from 'antd'
 import './index.scss'
 import { constantRoutes } from '@/router'
 import { useMemo } from 'react'
 import { RouteObject } from 'react-router-dom'
+import { displayTypeKV, menuStatusKV, menuTypeKV } from '@/types/common'
 
 const MenuSetting = () => {
   const handleFinish: FormProps['onFinish'] = (values) => {}
@@ -42,11 +54,57 @@ const MenuSetting = () => {
         <Form.Item label="菜单图标">
           <Select placeholder="请选择菜单图标"></Select>
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            保存
-          </Button>
-        </Form.Item>
+        <Row gutter={[16, 16]}>
+          <Col span={12}>
+            <Form.Item label="菜单类型">
+              <Radio.Group optionType="button">
+                {Object.keys(menuTypeKV).map((item) => (
+                  <Radio value={item}>{menuTypeKV[item]}</Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="显示排序">
+              <InputNumber placeholder="请输入显示排序" min={0}></InputNumber>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="显示状态">
+              <Radio.Group optionType="button">
+                {Object.keys(displayTypeKV).map((item) => (
+                  <Radio value={item}>{displayTypeKV[item]}</Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="菜单状态">
+              <Radio.Group optionType="button">
+                {Object.keys(menuStatusKV).map((item) => (
+                  <Radio value={item}>{menuStatusKV[item]}</Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col span={12} style={{ textAlign: 'right' }}>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                重置
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                保存
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </div>
   )
