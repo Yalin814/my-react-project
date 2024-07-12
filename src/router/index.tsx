@@ -19,96 +19,132 @@ import Workbench from '@/pages/Test/Workbench'
 import UseImmer from '@/pages/ReactTest/UseImmer'
 import OLTest from '@/pages/OLTest'
 import GDTest from '@/pages/GDTest'
+import MenuSetting from '@/pages/Setting/MenuSetting'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
-export const constantRoutes: RouteObject[] = [
+const nestingRoutes: RouteObject[] = [
   {
     path: '/',
     element: <App />,
     handle: {
-      crumb: '冷链云'
+      crumb: '平台'
     },
     children: [
       {
-        path: 'olTest',
-        element: <OLTest />,
+        path: 'setting',
+        element: <Setting />,
         handle: {
-          crumb: 'OLTest'
-        }
-      },
-      {
-        path: 'gdTest',
-        element: <GDTest />,
-        handle: {
-          crumb: 'GDTest'
-        }
+          crumb: '设置'
+        },
+        children: [
+          {
+            path: 'systemSetting',
+            element: <SystemSetting />,
+            handle: {
+              crumb: '系统设置'
+            }
+          },
+          {
+            path: 'menuSetting',
+            element: <MenuSetting />,
+            handle: {
+              crumb: '菜单管理'
+            }
+          }
+        ]
       }
-      // {
-      //   path: 'useImmer',
-      //   element: <UseImmer />,
-      //   handle: {
-      //     crumb: 'useImmer'
-      //   }
-      // }
-      // {
-      //   path: '/workbench',
-      //   element: <Workbench />,
-      //   handle: {
-      //     crumb: '工作台'
-      //   }
-      // },
-      // {
-      //   path: '/cockpit',
-      //   element: <Cockpit />,
-      //   handle: {
-      //     crumb: '驾驶舱'
-      //   }
-      // },
-      // {
-      //   path: '/evaluationIndex',
-      //   element: <EvaluationIndex />,
-      //   handle: {
-      //     crumb: '评价指标'
-      //   }
-      // }
-      // {
-      //   path: 'dashboard/:id',
-      //   element: <Dashboard />
-      // },
-      // {
-      //   path: 'dashboard',
-      //   element: <Dashboard />,
-      //   handle: {
-      //     crumb: '首页'
-      //   }
-      // },
-      // {
-      //   path: 'useContextTest',
-      //   element: <UseContextTest />
-      // },
-      // {
-      //   path: 'useImperativeHandleTest',
-      //   element: <UseImperativeHandleTest />
-      // },
-      // {
-      //   path: 'setting',
-      //   element: <Setting />,
-      //   handle: {
-      //     crumb: '设置'
-      //   },
-      //   children: [
-      //     {
-      //       path: 'systemSetting',
-      //       element: <SystemSetting />,
-      //       handle: {
-      //         crumb: '系统设置'
-      //       }
-      //     }
-      //   ]
-      // }
     ]
   }
+]
+
+export const constantRoutes: RouteObject[] = [
+  // {
+  //   path: '/',
+  //   element: <App />,
+  //   handle: {
+  //     crumb: '冷链云'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'olTest',
+  //       element: <OLTest />,
+  //       handle: {
+  //         crumb: 'OLTest'
+  //       }
+  //     },
+  //     {
+  //       path: 'gdTest',
+  //       element: <GDTest />,
+  //       handle: {
+  //         crumb: 'GDTest'
+  //       }
+  //     }
+  //     // {
+  //     //   path: 'useImmer',
+  //     //   element: <UseImmer />,
+  //     //   handle: {
+  //     //     crumb: 'useImmer'
+  //     //   }
+  //     // }
+  //     // {
+  //     //   path: '/workbench',
+  //     //   element: <Workbench />,
+  //     //   handle: {
+  //     //     crumb: '工作台'
+  //     //   }
+  //     // },
+  //     // {
+  //     //   path: '/cockpit',
+  //     //   element: <Cockpit />,
+  //     //   handle: {
+  //     //     crumb: '驾驶舱'
+  //     //   }
+  //     // },
+  //     // {
+  //     //   path: '/evaluationIndex',
+  //     //   element: <EvaluationIndex />,
+  //     //   handle: {
+  //     //     crumb: '评价指标'
+  //     //   }
+  //     // }
+  //     // {
+  //     //   path: 'dashboard/:id',
+  //     //   element: <Dashboard />
+  //     // },
+  //     // {
+  //     //   path: 'dashboard',
+  //     //   element: <Dashboard />,
+  //     //   handle: {
+  //     //     crumb: '首页'
+  //     //   }
+  //     // },
+  //     // {
+  //     //   path: 'useContextTest',
+  //     //   element: <UseContextTest />
+  //     // },
+  //     // {
+  //     //   path: 'useImperativeHandleTest',
+  //     //   element: <UseImperativeHandleTest />
+  //     // },
+  //     // {
+  //     //   path: 'setting',
+  //     //   element: <Setting />,
+  //     //   handle: {
+  //     //     crumb: '设置'
+  //     //   },
+  //     //   children: [
+  //     //     {
+  //     //       path: 'systemSetting',
+  //     //       element: <SystemSetting />,
+  //     //       handle: {
+  //     //         crumb: '系统设置'
+  //     //       }
+  //     //     }
+  //     //   ]
+  //     // }
+  //   ]
+  // }
   // {
   //   path: 'setting/systemSetting/commandCenter',
   //   element: <SystemSetting />,
@@ -177,6 +213,6 @@ export const constantRoutes: RouteObject[] = [
   //     }
   //   ]
   // }
-]
+].concat(nestingRoutes)
 
-export const router = createBrowserRouter(constantRoutes)
+export const router = createBrowserRouter(nestingRoutes)
