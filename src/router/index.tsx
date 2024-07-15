@@ -20,6 +20,7 @@ import UseImmer from '@/pages/ReactTest/UseImmer'
 import OLTest from '@/pages/OLTest'
 import GDTest from '@/pages/GDTest'
 import MenuSetting from '@/pages/Setting/MenuSetting'
+import ECMA2024 from '@/pages/ECMA2024'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -32,27 +33,34 @@ const nestingRoutes: RouteObject[] = [
     },
     children: [
       {
-        path: 'setting',
+        path: '/setting',
         element: <Setting />,
         handle: {
           crumb: '设置'
         },
         children: [
           {
-            path: 'systemSetting',
+            path: '/setting/systemSetting',
             element: <SystemSetting />,
             handle: {
               crumb: '系统设置'
             }
           },
           {
-            path: 'menuSetting',
+            path: '/setting/menuSetting',
             element: <MenuSetting />,
             handle: {
               crumb: '菜单管理'
             }
           }
         ]
+      },
+      {
+        path: '/ECMA2024',
+        element: <ECMA2024 />,
+        handle: {
+          crumb: 'ECMA2024'
+        }
       }
     ]
   }

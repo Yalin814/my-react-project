@@ -3,47 +3,35 @@ import { MenuFoldOutlined } from '@ant-design/icons'
 import './index.scss'
 import { useMemo, useState } from 'react'
 import { constantRoutes } from '@/router'
-import { NavLink, RouteObject } from 'react-router-dom'
+import { NavLink, RouteObject, useLocation } from 'react-router-dom'
 import { MenuType } from '@/types/common'
 
 type MenuItem = GetProp<MenuProps, 'items'>[number]
 
 const Sidebar = () => {
-  const [current, setCurrent] = useState('0')
+  const location = useLocation()
+  const [current, setCurrent] = useState(location.pathname)
   const [collapsed, setCollapsed] = useState(false)
   const [mode, setMode] = useState<'vertical' | 'inline'>('inline')
 
-  const generateMenu = (routes: RouteObject[], path?: string, prefix: string = '') => {
-    return routes.map((route, index) => {
+  const generateMenu = (routes: RouteObject[]) => {
+    return routes.map((route) => {
       return {
-        key: prefix + index,
+        key: route.path,
         icon: <MenuFoldOutlined />,
         label:
           route.children && route.children.length > 0 ? (
             route.handle?.crumb
           ) : route.handle && route.handle.menuType == MenuType.LINK ? (
-            <a
-              href={path ? `${path}/${route.path}` : route.path}
-              target="_blank"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <a href={route.path} target="_blank" onClick={(e) => e.stopPropagation()}>
               {route.handle?.crumb}
             </a>
           ) : (
-            <NavLink to={path ? `${path}/${route.path}` : route.path}>
-              {route.handle?.crumb}
-            </NavLink>
+            <NavLink to={route.path}>{route.handle?.crumb}</NavLink>
           ),
         title: route.handle?.crumb,
-        path: path ? `${path}/${route.path}` : route.path,
-        children:
-          route.children && route.children.length > 0
-            ? generateMenu(
-                route.children,
-                path ? `${path}/${route.path}` : route.path,
-                prefix + index + '-'
-              )
-            : null
+        path: route.path,
+        children: route.children && route.children.length > 0 ? generateMenu(route.children) : null
       }
     })
   }
