@@ -1,3 +1,4 @@
+import { use } from 'echarts'
 import { useEffect, useMemo } from 'react'
 
 const ECMA2024 = () => {
@@ -60,9 +61,43 @@ const ECMA2024 = () => {
       /^\p{L}{2}[\p{L}\p{N}]*[\p{N}]$/v.test('AA5A5')
     )
     // 2.字符串的属性，允许使用\p 转义的多节点属性
-
+    console.log(
+      "'Did you see 👍'.match(/\\p{RGI_Emoji}/v)",
+      'Did you see 👍'.match(/\p{RGI_Emoji}/v)
+    )
     // 3.集合中的多节点字符串，使用一个新的 \q 转义
+    console.log(
+      "/[\\r\\n\\q{\\r\\n|NEWLINE}]/v.test('\\rNEWLINE')",
+      /[\r\n\q{\r\n|NEWLINE}]/v.test('\rNEWLINE')
+    )
   }, [])
+
+  // 4. ArrayBuffers 和 SharedArrayBuffers 的新功能
+  useEffect(() => {
+    // 4.1 ArrayBuffer 就地调整大小
+    // 不允许超过预先定义的 maxByteLength , resize 可增大也可以减小
+    const arrayBuffer = new ArrayBuffer(2, { maxByteLength: 10 })
+    console.log(arrayBuffer.byteLength)
+    arrayBuffer.resize(8)
+    console.log(arrayBuffer.byteLength)
+    // 4.2  ArrayBuffer  .transfer() 可转移
+    const original = new ArrayBuffer(8)
+    const transferred = original.transfer()
+    console.log(original)
+    console.log(transferred)
+    // 4.3 SharedArrayBuffer
+    // SharedArrayBuffer可以调整大小，但它们只能增长而不能缩小。
+    // 它们不可转移，因此无法获取 ArrayBuffer所获取的方法 .transfer()。
+  }, [])
+
+  // 5 新增了两个确保字符串格式正确的函数
+  useEffect(() => {
+    // 5.1 String.prototype.isWellFormed
+    // 5.2 String.prototype.toWellFormed
+  }, [])
+
+  // 6. Atomics.waitAsync()
+  useEffect(() => {}, [])
   return <div>&#176;</div>
 }
 
