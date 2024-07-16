@@ -8,8 +8,9 @@ export enum UserApi {
   REMOVE_USER = '/user/removeUser/'
 }
 
-export function getUserInfo(userId: string) {
+export function getUserInfo(userId: string, signal?: AbortSignal) {
   return service.get<UserInfo>(UserApi.GET_USER_INFO, {
+    signal,
     params: {
       userId
     }

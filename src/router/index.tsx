@@ -20,7 +20,9 @@ import UseImmer from '@/pages/ReactTest/UseImmer'
 import OLTest from '@/pages/OLTest'
 import GDTest from '@/pages/GDTest'
 import MenuSetting from '@/pages/Setting/MenuSetting'
-import ECMA2024 from '@/pages/ECMA2024'
+import ECMA2024 from '@/pages/Other/ECMA2024'
+import Other from '@/pages/Other'
+import AbortController from '@/pages/Other/AbortController'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -56,11 +58,27 @@ const nestingRoutes: RouteObject[] = [
         ]
       },
       {
-        path: '/ECMA2024',
-        element: <ECMA2024 />,
+        path: '/other',
+        element: <Other />,
         handle: {
-          crumb: 'ECMA2024'
-        }
+          crumb: '其他'
+        },
+        children: [
+          {
+            path: '/other/abortController',
+            element: <AbortController />,
+            handle: {
+              crumb: 'AbortController'
+            }
+          },
+          {
+            path: '/other/ECMA2024',
+            element: <ECMA2024 />,
+            handle: {
+              crumb: 'ECMA2024'
+            }
+          }
+        ]
       }
     ]
   }
