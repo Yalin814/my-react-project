@@ -24,6 +24,7 @@ import ECMA2024 from '@/pages/Other/ECMA2024'
 import Other from '@/pages/Other'
 import AbortController from '@/pages/Other/AbortController'
 import ClassTest from '@/pages/Other/ClassTest'
+import IconTest from '@/pages/Other/IconTest'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -84,6 +85,13 @@ const nestingRoutes: RouteObject[] = [
             element: <ClassTest />,
             handle: {
               crumb: 'ClassTest'
+            }
+          },
+          {
+            path: '/other/iconTest',
+            element: <IconTest />,
+            handle: {
+              crumb: 'IconTest'
             }
           }
         ]
