@@ -7,7 +7,7 @@ import './index.less'
 const MainLayout: React.FC = () => {
   return (
     <Layout className="main-layout">
-      {/* <Header /> */}
+      <Header />
       <Layout>
         <Sidebar />
         <MainContent />

@@ -8,7 +8,9 @@ const Header = () => {
   }
   return (
     <Layout.Header className="layout-header">
-      <Button onClick={handleClick}>outer link</Button>
+      <div></div>
+      <div></div>
+      {/* <Button onClick={handleClick}>outer link</Button> */}
     </Layout.Header>
   )
 }
