@@ -5,9 +5,10 @@ const AbortControllerTest = () => {
   const postApi = () => {
     const controller = new AbortController()
     const signal = controller.signal
-    console.log(signal)
     const { promise, resolve, reject } = Promise.withResolvers()
-    getUserInfo('', signal)
+
+    // getUserInfo('', signal)
+    fetch('https://api.chucknorris.io/jokes/random', { signal })
       .then(() => {
         resolve()
       })
