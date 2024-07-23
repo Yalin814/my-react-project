@@ -9,7 +9,7 @@ import 'dayjs/locale/zh-cn'
 dayjs.locale('zh-cn')
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-  <RouterProvider router={router}></RouterProvider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router}></RouterProvider>
+  </React.StrictMode>
 )
