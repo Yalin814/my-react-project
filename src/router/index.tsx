@@ -28,6 +28,7 @@ import IconTest from '@/pages/Other/IconTest'
 import UseLayoutEffect from '@/pages/Other/UseLayoutEffect'
 import Office from '@/pages/Office'
 import Docx from '@/pages/Office/Docx'
+import Pdf from '@/pages/Office/Pdf'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -118,6 +119,13 @@ const nestingRoutes: RouteObject[] = [
             element: <Docx />,
             handle: {
               crumb: 'docx'
+            }
+          },
+          {
+            path: '/office/pdf',
+            element: <Pdf />,
+            handle: {
+              crumb: 'pdf'
             }
           }
         ]
