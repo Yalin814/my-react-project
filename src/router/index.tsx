@@ -26,6 +26,8 @@ import AbortController from '@/pages/Other/AbortController'
 import ClassTest from '@/pages/Other/ClassTest'
 import IconTest from '@/pages/Other/IconTest'
 import UseLayoutEffect from '@/pages/Other/UseLayoutEffect'
+import Office from '@/pages/Office'
+import Docx from '@/pages/Office/Docx'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -100,6 +102,22 @@ const nestingRoutes: RouteObject[] = [
             element: <UseLayoutEffect />,
             handle: {
               crumb: 'UseLayoutEffect'
+            }
+          }
+        ]
+      },
+      {
+        path: '/office',
+        element: <Office />,
+        handle: {
+          crumb: 'office'
+        },
+        children: [
+          {
+            path: '/office/docx',
+            element: <Docx />,
+            handle: {
+              crumb: 'docx'
             }
           }
         ]
