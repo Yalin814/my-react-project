@@ -19,7 +19,7 @@ export default defineConfig({
   build: {
     outDir: 'docs'
   },
-  base: './',
+  base: '/my-react-project',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
