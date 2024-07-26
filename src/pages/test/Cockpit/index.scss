@@ -1,0 +1,28 @@
+.cockpit-container {
+  height: 100%;
+
+  .search-form {
+    background: #ffffff;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-spin-nested-loading {
+    height: calc(100% - 72px);
+    .ant-spin-container {
+      height: 100%;
+    }
+  }
+
+  .map {
+    height: 100%;
+    width: 100%;
+    .tdt-overlay-pane {
+      z-index: 999;
+    }
+  }
+}

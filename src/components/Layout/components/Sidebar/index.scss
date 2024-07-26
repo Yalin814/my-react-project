@@ -1,0 +1,15 @@
+.layout-sider {
+  background: #ffffff !important;
+  border-right: 1px solid var(--border-color);
+  &-title {
+    height: 48px;
+    line-height: 48px;
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 12px;
+    text-align: center;
+  }
+  .ant-menu-title-content {
+    text-align: left;
+  }
+}

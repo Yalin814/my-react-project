@@ -1,0 +1,14 @@
+.layout-breadcrumb {
+    width: 100%;
+    background: #ffffff;
+    padding-inline: 12px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+
+    .active {
+        color: var(--color-primary) !important;
+    }
+    
+}

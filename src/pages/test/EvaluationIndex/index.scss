@@ -1,0 +1,49 @@
+.map-container {
+  height: 100%;
+
+  .search-form {
+    background: #ffffff;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-spin-nested-loading {
+    height: calc(100% - 72px);
+    .ant-spin-container {
+      height: 100%;
+    }
+  }
+
+  .map {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    .go-back {
+      position: absolute;
+      z-index: 999;
+      top: 0;
+      right: 0;
+    }
+  }
+  .custom-menu {
+    width: 156px;
+    padding: 0 6px;
+    background: #ffffff;
+    text-align: left;
+    position: absolute;
+    z-index: 10000;
+    border-radius: 6px;
+    > div {
+      cursor: pointer;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    > div:hover {
+      color: var(--color-primary);
+    }
+  }
+}
