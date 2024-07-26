@@ -1,4 +1,4 @@
-import { RouteObject, createHashRouter } from 'react-router-dom'
+import { RouteObject, createBrowserRouter } from 'react-router-dom'
 import App from '../App'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
@@ -32,30 +32,32 @@ import Pdf from '@/pages/Office/Pdf'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
+const basename = '/my-react-project'
+
 const nestingRoutes: RouteObject[] = [
   {
-    path: '/',
+    path: basename,
     element: <App />,
     handle: {
       crumb: '平台'
     },
     children: [
       {
-        path: '/setting',
+        path: basename + '/setting',
         element: <Setting />,
         handle: {
           crumb: '设置'
         },
         children: [
           {
-            path: '/setting/systemSetting',
+            path: basename + '/setting/systemSetting',
             element: <SystemSetting />,
             handle: {
               crumb: '系统设置'
             }
           },
           {
-            path: '/setting/menuSetting',
+            path: basename + '/setting/menuSetting',
             element: <MenuSetting />,
             handle: {
               crumb: '菜单管理'
@@ -64,42 +66,42 @@ const nestingRoutes: RouteObject[] = [
         ]
       },
       {
-        path: '/other',
+        path: basename + '/other',
         element: <Other />,
         handle: {
           crumb: '其他'
         },
         children: [
           {
-            path: '/other/abortController',
+            path: basename + '/other/abortController',
             element: <AbortController />,
             handle: {
               crumb: 'AbortController'
             }
           },
           {
-            path: '/other/ECMA2024',
+            path: basename + '/other/ECMA2024',
             element: <ECMA2024 />,
             handle: {
               crumb: 'ECMA2024'
             }
           },
           {
-            path: '/other/classTest',
+            path: basename + '/other/classTest',
             element: <ClassTest />,
             handle: {
               crumb: 'ClassTest'
             }
           },
           {
-            path: '/other/iconTest',
+            path: basename + '/other/iconTest',
             element: <IconTest />,
             handle: {
               crumb: 'IconTest'
             }
           },
           {
-            path: '/other/useLayoutEffect',
+            path: basename + '/other/useLayoutEffect',
             element: <UseLayoutEffect />,
             handle: {
               crumb: 'UseLayoutEffect'
@@ -108,21 +110,21 @@ const nestingRoutes: RouteObject[] = [
         ]
       },
       {
-        path: '/office',
+        path: basename + '/office',
         element: <Office />,
         handle: {
           crumb: 'office'
         },
         children: [
           {
-            path: '/office/docx',
+            path: basename + '/office/docx',
             element: <Docx />,
             handle: {
               crumb: 'docx'
             }
           },
           {
-            path: '/office/pdf',
+            path: basename + '/office/pdf',
             element: <Pdf />,
             handle: {
               crumb: 'pdf'
@@ -291,6 +293,6 @@ export const constantRoutes: RouteObject[] = [
   // }
 ].concat(nestingRoutes)
 
-export const router = createHashRouter(nestingRoutes, {
-  // basename: '/my-react-project'
+export const router = createBrowserRouter(nestingRoutes, {
+  // basename
 })
