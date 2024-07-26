@@ -3,13 +3,13 @@ import { Await, useAsyncValue, useLoaderData, useSubmit } from 'react-router-dom
 import { Spin, Table, Button } from 'antd'
 
 const Test = () => {
-  const user = useAsyncValue()
+  const user: { name: string } = useAsyncValue() as { name: string }
 
   return <div>{user.name}</div>
 }
 
 const LoaderTest = () => {
-  const { user } = useLoaderData()
+  const { user } = useLoaderData() as { user: { name: string } }
   const submit = useSubmit()
 
   const handleClick = () => {

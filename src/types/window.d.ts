@@ -1,6 +1,7 @@
 declare global {
   interface Window {
     T: any
+    _AMapSecurityConfig: any
   }
   interface ObjectConstructor {
     /**
@@ -25,6 +26,14 @@ declare global {
 
   interface PromiseConstructor {
     withResolvers()
+  }
+
+  interface ArrayBufferConstructor {
+    new (byteLength: number, options?: { maxByteLength: number }): ArrayBuffer
+  }
+  interface ArrayBuffer {
+    resize(byteLength: number)
+    transfer()
   }
 }
 
