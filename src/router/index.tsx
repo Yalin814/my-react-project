@@ -13,9 +13,9 @@ import AxisPracticing from '@/pages/ThreeDemo/AxisPracticing'
 import RouterTest from '@/pages/RouterTest'
 import { lazy } from 'react'
 import { MenuType } from '@/types/common'
-import EvaluationIndex from '@/pages/Test/EvaluationIndex'
-import Cockpit from '@/pages/Test/Cockpit'
-import Workbench from '@/pages/Test/Workbench'
+import EvaluationIndex from '@/pages/test/EvaluationIndex'
+import Cockpit from '@/pages/test/Cockpit'
+import Workbench from '@/pages/test/Workbench'
 import UseImmer from '@/pages/ReactTest/UseImmer'
 import OLTest from '@/pages/OLTest'
 import GDTest from '@/pages/GDTest'
@@ -291,4 +291,6 @@ export const constantRoutes: RouteObject[] = [
   // }
 ].concat(nestingRoutes)
 
-export const router = createBrowserRouter(nestingRoutes)
+export const router = createBrowserRouter(nestingRoutes, {
+  basename: '/my-react-project'
+})
