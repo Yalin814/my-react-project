@@ -32,32 +32,30 @@ import Pdf from '@/pages/Office/Pdf'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
-const basename = '/my-react-project'
-
 const nestingRoutes: RouteObject[] = [
   {
-    path: basename,
+    path: '/',
     element: <App />,
     handle: {
       crumb: '平台'
     },
     children: [
       {
-        path: basename + '/setting',
+        path: '/setting',
         element: <Setting />,
         handle: {
           crumb: '设置'
         },
         children: [
           {
-            path: basename + '/setting/systemSetting',
+            path: '/setting/systemSetting',
             element: <SystemSetting />,
             handle: {
               crumb: '系统设置'
             }
           },
           {
-            path: basename + '/setting/menuSetting',
+            path: '/setting/menuSetting',
             element: <MenuSetting />,
             handle: {
               crumb: '菜单管理'
@@ -66,42 +64,42 @@ const nestingRoutes: RouteObject[] = [
         ]
       },
       {
-        path: basename + '/other',
+        path: '/other',
         element: <Other />,
         handle: {
           crumb: '其他'
         },
         children: [
           {
-            path: basename + '/other/abortController',
+            path: '/other/abortController',
             element: <AbortController />,
             handle: {
               crumb: 'AbortController'
             }
           },
           {
-            path: basename + '/other/ECMA2024',
+            path: '/other/ECMA2024',
             element: <ECMA2024 />,
             handle: {
               crumb: 'ECMA2024'
             }
           },
           {
-            path: basename + '/other/classTest',
+            path: '/other/classTest',
             element: <ClassTest />,
             handle: {
               crumb: 'ClassTest'
             }
           },
           {
-            path: basename + '/other/iconTest',
+            path: '/other/iconTest',
             element: <IconTest />,
             handle: {
               crumb: 'IconTest'
             }
           },
           {
-            path: basename + '/other/useLayoutEffect',
+            path: '/other/useLayoutEffect',
             element: <UseLayoutEffect />,
             handle: {
               crumb: 'UseLayoutEffect'
@@ -110,21 +108,21 @@ const nestingRoutes: RouteObject[] = [
         ]
       },
       {
-        path: basename + '/office',
+        path: '/office',
         element: <Office />,
         handle: {
           crumb: 'office'
         },
         children: [
           {
-            path: basename + '/office/docx',
+            path: '/office/docx',
             element: <Docx />,
             handle: {
               crumb: 'docx'
             }
           },
           {
-            path: basename + '/office/pdf',
+            path: '/office/pdf',
             element: <Pdf />,
             handle: {
               crumb: 'pdf'
@@ -294,5 +292,5 @@ export const constantRoutes: RouteObject[] = [
 ].concat(nestingRoutes)
 
 export const router = createBrowserRouter(nestingRoutes, {
-  // basename
+  basename: '/my-react-project'
 })
