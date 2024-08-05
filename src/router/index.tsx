@@ -29,6 +29,7 @@ import UseLayoutEffect from '@/pages/Other/UseLayoutEffect'
 import Office from '@/pages/Office'
 import Docx from '@/pages/Office/Docx'
 import Pdf from '@/pages/Office/Pdf'
+import QRCode from '@/pages/Other/QRCode'
 
 const LoaderTest = lazy(() => import('@/pages/RouterTest/LoaderTest/index.tsx'))
 
@@ -103,6 +104,13 @@ const nestingRoutes: RouteObject[] = [
             element: <UseLayoutEffect />,
             handle: {
               crumb: 'UseLayoutEffect'
+            }
+          },
+          {
+            path: '/other/qrCode',
+            element: <QRCode />,
+            handle: {
+              crumb: 'QRCode'
             }
           }
         ]
