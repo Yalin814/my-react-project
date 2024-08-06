@@ -1,8 +1,8 @@
 import './iconfont/iconfont.css'
 
 const Icon = (props) => {
-  const { name, style } = props
-  return <i className={`iconfont ${name}`} style={style}></i>
+  const { name, style, onClick } = props
+  return <i className={`iconfont ${name}`} style={style} onClick={onClick}></i>
 }
 
 export default Icon
